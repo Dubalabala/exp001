@@ -9,9 +9,9 @@ Executor* Executor::NewExecutor(const Pose& pose) noexcept
     return new (std::nothrow) ExecutorImpl(pose);
 }
 
-ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept
+ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : pose(pose)
 {
-    // 空实现：暂未保存初始位置，后续将在功能实现阶段完善
+    // 这里使用初始化列表直接保存传入的 pose
 }
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
