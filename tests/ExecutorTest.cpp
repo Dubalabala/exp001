@@ -27,4 +27,16 @@ TEST(ExecutorTest, should_return_init_pose_when_without_command)
     ASSERT_EQ(target, executor->Query());
 }
 
+// 测试用例2：未初始化车的位置和朝向，查询接口默认返回(0,0,N)
+TEST(ExecutorTest, should_return_default_pose_when_without_init_and_command)
+{
+    // given (没有传入初始化位置，使用默认参数)
+    std::unique_ptr<Executor> executor(Executor::NewExecutor());
+
+    // when (无指令执行)
+
+    // then (期望默认返回 0, 0, 'N')
+    const Pose target({0, 0, 'N'});
+    ASSERT_EQ(target, executor->Query());
+}
 }  // namespace adas
