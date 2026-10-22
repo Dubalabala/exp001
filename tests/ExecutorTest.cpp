@@ -121,6 +121,14 @@ TEST(ExecutorTest, should_return_facing_S_given_command_is_L_and_facing_is_W)
     ASSERT_EQ(target, executor->Query());
 }
 
+TEST(ExecutorTest, should_return_facing_E_given_command_is_L_and_facing_is_S)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'S'}));
+    executor->Execute("L");
+    const Pose target({0, 0, 'E'});
+    ASSERT_EQ(target, executor->Query());
+}
+
 // ================= 右转指令 R 测试 =================
 TEST(ExecutorTest, should_return_facing_S_given_command_is_R_and_facing_is_E)
 {
