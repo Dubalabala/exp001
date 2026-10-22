@@ -67,4 +67,18 @@ TEST(ExecutorTest, should_return_x_minus_1_given_command_is_M_and_facing_is_W)
     const Pose target({-1, 0, 'W'});
     ASSERT_EQ(target, executor->Query());
 }
+
+// 测试用例5：移动指令支持，向北移动1步
+TEST(ExecutorTest, should_return_y_plus_1_given_command_is_M_and_facing_is_N)
+{
+    // given
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'N'}));
+
+    // when
+    executor->Execute("M");
+
+    // then
+    const Pose target({0, 1, 'N'});
+    ASSERT_EQ(target, executor->Query());
+}
 }  // namespace adas
