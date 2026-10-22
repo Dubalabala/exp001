@@ -16,7 +16,13 @@ ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : pose(pose)
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
-    // 空实现：暂不处理指令
+    for (const auto cmd : commands) {
+        if (cmd == 'M') {
+            if (pose.heading == 'E') {
+                ++pose.x;
+            }
+        }
+    }
 }
 
 Pose ExecutorImpl::Query() const noexcept
