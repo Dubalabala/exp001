@@ -27,6 +27,40 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
             } else if (pose.heading == 'S') {
                 --pose.y;
             }
+        } else if (cmd == 'L') {
+            switch (pose.heading) {
+            case 'E':
+                pose.heading = 'N';
+                break;
+            case 'N':
+                pose.heading = 'W';
+                break;
+            case 'W':
+                pose.heading = 'S';
+                break;
+            case 'S':
+                pose.heading = 'E';
+                break;
+            default:
+                break;
+            }
+        } else if (cmd == 'R') {
+            switch (pose.heading) {
+            case 'E':
+                pose.heading = 'S';
+                break;
+            case 'S':
+                pose.heading = 'W';
+                break;
+            case 'W':
+                pose.heading = 'N';
+                break;
+            case 'N':
+                pose.heading = 'E';
+                break;
+            default:
+                break;
+            }
         }
     }
 }
