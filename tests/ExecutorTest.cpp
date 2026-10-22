@@ -104,4 +104,12 @@ TEST(ExecutorTest, should_return_facing_N_given_command_is_L_and_facing_is_E)
     const Pose target({0, 0, 'N'});
     ASSERT_EQ(target, executor->Query());
 }
+
+TEST(ExecutorTest, should_return_facing_W_given_command_is_L_and_facing_is_N)
+{
+    std::unique_ptr<Executor> executor(Executor::NewExecutor({0, 0, 'N'}));
+    executor->Execute("L");
+    const Pose target({0, 0, 'W'});
+    ASSERT_EQ(target, executor->Query());
+}
 }  // namespace adas
