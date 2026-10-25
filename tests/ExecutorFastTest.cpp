@@ -1,6 +1,7 @@
 #include <gtest/gtest.h>
 
 #include "Executor.hpp"
+#include "PoseEq.hpp"
 
 namespace adas
 {

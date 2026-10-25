@@ -1,18 +1,19 @@
 #include <gtest/gtest.h>
 
 #include <memory>
-#include <tuple>
+//#include <tuple>
 
 #include "Executor.hpp"
+#include "PoseEq.hpp"
 
 namespace adas
 {
 
 // 为 Pose 定义 == 运算符重载，使得在测试中比较 Pose 对象变得简单明了
-bool operator==(const Pose& lhs, const Pose& rhs)
-{
-    return std::tie(lhs.x, lhs.y, lhs.heading) == std::tie(rhs.x, rhs.y, rhs.heading);
-}
+//bool operator==(const Pose& lhs, const Pose& rhs)
+//{
+//    return std::tie(lhs.x, lhs.y, lhs.heading) == std::tie(rhs.x, rhs.y, rhs.heading);
+//}
 
 // 测试用例1：初始化车的位置和朝向
 TEST(ExecutorTest, should_return_init_pose_when_without_command)
