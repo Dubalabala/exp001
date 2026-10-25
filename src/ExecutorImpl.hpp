@@ -18,39 +18,50 @@ public:
     void Execute(const std::string& command) noexcept override;
     Pose Query(void) const noexcept override;
 
-private:  // 注意：以下类定义在 private 区域
-    class MoveCommand final
+private:
+    // 1. 先声明具体的动作方法
+    void Move(void) noexcept;
+    void TurnLeft(void) noexcept;
+    void TurnRight(void) noexcept;
+
+    // 2. 定义抽象基类 ICommand
+    class ICommand
     {
     public:
-        void DoOperate(ExecutorImpl& executor) const noexcept
+        virtual ~ICommand() = default;
+        virtual void DoOperate(ExecutorImpl& executor) const noexcept = 0;
+    };
+
+    // 3. 定义具体的命令类，继承自 ICommand
+    class MoveCommand final : public ICommand
+    {
+    public:
+        void DoOperate(ExecutorImpl& executor) const noexcept override
         {
             executor.Move();
         }
     };
 
-    class TurnLeftCommand final
+    class TurnLeftCommand final : public ICommand
     {
     public:
-        void DoOperate(ExecutorImpl& executor) const noexcept
+        void DoOperate(ExecutorImpl& executor) const noexcept override
         {
             executor.TurnLeft();
         }
     };
 
-    class TurnRightCommand final
+    class TurnRightCommand final : public ICommand
     {
     public:
-        void DoOperate(ExecutorImpl& executor) const noexcept
+        void DoOperate(ExecutorImpl& executor) const noexcept override
         {
             executor.TurnRight();
         }
     };
 
-private:
+    // 4. 成员变量放在最后
     Pose pose;
-    void Move(void) noexcept;
-    void TurnLeft(void) noexcept;
-    void TurnRight(void) noexcept;
 };
 
 }  // namespace adas
