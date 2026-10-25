@@ -3,6 +3,7 @@
 
 #include <memory>
 
+
 namespace adas
 {
 
@@ -27,12 +28,14 @@ void ExecutorImpl::Execute(const std::string& commands) noexcept
             cmder = std::make_unique<TurnLeftCommand>();
         } else if (cmd == 'R') {
             cmder = std::make_unique<TurnRightCommand>();
+        } else if (cmd == 'F') {
+            cmder = std::make_unique<FastCommand>(); 
         }
 
         if (cmder) {
-            cmder->DoOperate(*this);
+             cmder->DoOperate(*this);
         }
-    }
+        }
 }
 
 void ExecutorImpl::Move() noexcept
@@ -71,6 +74,16 @@ void ExecutorImpl::TurnRight() noexcept
     } else if (pose.heading == 'N') {
         pose.heading = 'E';
     }
+}
+
+void ExecutorImpl::Fast() noexcept
+{
+    fast = !fast;  // 取反：未加速变加速，加速变普通
+}
+
+bool ExecutorImpl::IsFast() const noexcept
+{
+    return fast;
 }
 
 Pose ExecutorImpl::Query() const noexcept

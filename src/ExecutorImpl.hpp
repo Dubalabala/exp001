@@ -24,6 +24,9 @@ private:
     void TurnLeft(void) noexcept;
     void TurnRight(void) noexcept;
 
+    void Fast(void) noexcept;
+    bool IsFast(void) const noexcept;
+
     // 2. 定义抽象基类 ICommand
     class ICommand
     {
@@ -38,6 +41,9 @@ private:
     public:
         void DoOperate(ExecutorImpl& executor) const noexcept override
         {
+            if (executor.IsFast()) {
+                executor.Move();  // 加速状态下多走一格
+            }
             executor.Move();
         }
     };
@@ -47,6 +53,9 @@ private:
     public:
         void DoOperate(ExecutorImpl& executor) const noexcept override
         {
+            if (executor.IsFast()) {
+                executor.Move();  // 加速状态下先走一格
+            }
             executor.TurnLeft();
         }
     };
@@ -56,12 +65,25 @@ private:
     public:
         void DoOperate(ExecutorImpl& executor) const noexcept override
         {
+            if (executor.IsFast()) {
+                executor.Move();  // 加速状态下先走一格
+            }
             executor.TurnRight();
+        }
+    };
+
+    class FastCommand final : public ICommand
+    {
+    public:
+        void DoOperate(ExecutorImpl& executor) const noexcept override
+        {
+            executor.Fast();
         }
     };
 
     // 4. 成员变量放在最后
     Pose pose;
+    bool fast{false};  // 默认未处于加速状态
 };
 
 }  // namespace adas
