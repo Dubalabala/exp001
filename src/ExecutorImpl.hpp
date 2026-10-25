@@ -18,6 +18,34 @@ public:
     void Execute(const std::string& command) noexcept override;
     Pose Query(void) const noexcept override;
 
+private:  // 注意：以下类定义在 private 区域
+    class MoveCommand final
+    {
+    public:
+        void DoOperate(ExecutorImpl& executor) const noexcept
+        {
+            executor.Move();
+        }
+    };
+
+    class TurnLeftCommand final
+    {
+    public:
+        void DoOperate(ExecutorImpl& executor) const noexcept
+        {
+            executor.TurnLeft();
+        }
+    };
+
+    class TurnRightCommand final
+    {
+    public:
+        void DoOperate(ExecutorImpl& executor) const noexcept
+        {
+            executor.TurnRight();
+        }
+    };
+
 private:
     Pose pose;
     void Move(void) noexcept;
