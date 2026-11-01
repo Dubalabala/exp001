@@ -20,20 +20,24 @@ ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : poseHandler(pose)
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
-    // 1. 构建表驱动
-    std::unordered_map<char, std::unique_ptr<ICommand>> cmderMap;
-    cmderMap.emplace('M', std::make_unique<MoveCommand>());
-    cmderMap.emplace('L', std::make_unique<TurnLeftCommand>());
-    cmderMap.emplace('R', std::make_unique<TurnRightCommand>());
-    cmderMap.emplace('F', std::make_unique<FastCommand>());
-    cmderMap.emplace('B', std::make_unique<ReverseCommand>());  // 新增这一行
+    // 映射表的 Value 变成了 std::function<void(PoseHandler&)>
+    std::unordered_map<char, std::function<void(PoseHandler&)>> cmderMap;
 
-    // 2. 统一的遍历逻辑（对应 PPT Page 16 截图的下半部分）
+    MoveCommand moveCommand;
+    cmderMap.emplace('M', moveCommand.operate);
+    TurnLeftCommand turnLeftCommand;
+    cmderMap.emplace('L', turnLeftCommand.operate);
+    TurnRightCommand turnRightCommand;
+    cmderMap.emplace('R', turnRightCommand.operate);
+    FastCommand fastCommand;
+    cmderMap.emplace('F', fastCommand.operate);
+    ReverseCommand reverseCommand;
+    cmderMap.emplace('B', reverseCommand.operate);
+
     for (const auto cmd : commands) {
         const auto it = cmderMap.find(cmd);
         if (it != cmderMap.end()) {
-            // 重点：这里传入的是解耦后的 poseHandler，不再是 *this
-            it->second->DoOperate(poseHandler);
+            it->second(poseHandler);  // 直接像调用函数一样调用 operate
         }
     }
 }
