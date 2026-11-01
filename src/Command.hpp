@@ -30,13 +30,8 @@ public:
     {
         if (poseHandler.IsFast()) {
             poseHandler.Move();
-        }  // 叠加时先退1格
-        // 倒车时左转，实际上是车头向右转
-        if (poseHandler.IsReverse()) {
-            poseHandler.TurnRight();
-        } else {
-            poseHandler.TurnLeft();
-        }
+        }                        // 叠加时先退/进1格
+        poseHandler.TurnLeft();  // 直接调用，倒车逻辑底层已处理
     }
 };
 
@@ -47,13 +42,8 @@ public:
     {
         if (poseHandler.IsFast()) {
             poseHandler.Move();
-        }  // 叠加时先退1格
-        // 倒车时右转，实际上是车头向左转
-        if (poseHandler.IsReverse()) {
-            poseHandler.TurnLeft();
-        } else {
-            poseHandler.TurnRight();
-        }
+        }                         // 叠加时先退/进1格
+        poseHandler.TurnRight();  // 直接调用，倒车逻辑底层已处理
     }
 };
 
