@@ -1,59 +1,59 @@
 #pragma once
-#include "ExecutorImpl.hpp"
+#include "PoseHandler.hpp"  // 依赖变成 PoseHandler
 
-namespace adas{
+namespace adas
+{
 
-// 2. 定义抽象基类 ICommand
 class ICommand
 {
 public:
     virtual ~ICommand() = default;
-    virtual void DoOperate(ExecutorImpl& executor) const noexcept = 0;
+    virtual void DoOperate(PoseHandler& poseHandler) const noexcept = 0;  // 参数变更
 };
 
-// 3. 定义具体的命令类，继承自 ICommand
 class MoveCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
+    void DoOperate(PoseHandler& poseHandler) const noexcept override
     {
-        if (executor.IsFast()) {
-            executor.Move();  // 加速状态下多走一格
+        if (poseHandler.IsFast()) {
+            poseHandler.Move();
         }
-        executor.Move();
+        poseHandler.Move();
     }
 };
 
 class TurnLeftCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
+    void DoOperate(PoseHandler& poseHandler) const noexcept override
     {
-        if (executor.IsFast()) {
-            executor.Move();  // 加速状态下先走一格
+        if (poseHandler.IsFast()) {
+            poseHandler.Move();
         }
-        executor.TurnLeft();
+        poseHandler.TurnLeft();  // 纠错PPT的笔误
     }
 };
 
 class TurnRightCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
+    void DoOperate(PoseHandler& poseHandler) const noexcept override
     {
-        if (executor.IsFast()) {
-            executor.Move();  // 加速状态下先走一格
+        if (poseHandler.IsFast()) {
+            poseHandler.Move();
         }
-        executor.TurnRight();
+        poseHandler.TurnRight();
     }
 };
 
 class FastCommand final : public ICommand
 {
 public:
-    void DoOperate(ExecutorImpl& executor) const noexcept override
+    void DoOperate(PoseHandler& poseHandler) const noexcept override
     {
-        executor.Fast();
+        poseHandler.Fast();
     }
 };
-}
+
+}  // namespace adas

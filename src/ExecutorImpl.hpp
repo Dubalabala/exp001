@@ -1,6 +1,6 @@
 #pragma once
-
 #include "Executor.hpp"
+#include "PoseHandler.hpp"
 
 namespace adas
 {
@@ -27,12 +27,12 @@ public:
     void Fast(void) noexcept;
     bool IsFast(void) const noexcept;
 
-    
-    
-
     // 4. 成员变量放在最后
     Pose pose;
     bool fast{false};  // 默认未处于加速状态
+
+private:
+    PoseHandler poseHandler;
 };
 
 }  // namespace adas

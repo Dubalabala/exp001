@@ -1,8 +1,10 @@
 
 #include "ExecutorImpl.hpp"
-#include "Command.hpp"
-#include <memory>
 
+#include <memory>
+#include <unordered_map>
+
+#include "Command.hpp"
 
 namespace adas
 {
@@ -12,30 +14,27 @@ Executor* Executor::NewExecutor(const Pose& pose) noexcept
     return new (std::nothrow) ExecutorImpl(pose);
 }
 
-ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : pose(pose)
+ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : poseHandler(pose)
 {
-    // 这里使用初始化列表直接保存传入的 pose
 }
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
+    // 1. 构建表驱动（这就是 PPT 里 ... 省略的部分，从 Page 22 抄过来的）
+    std::unordered_map<char, std::unique_ptr<ICommand>> cmderMap;
+    cmderMap.emplace('M', std::make_unique<MoveCommand>());
+    cmderMap.emplace('L', std::make_unique<TurnLeftCommand>());
+    cmderMap.emplace('R', std::make_unique<TurnRightCommand>());
+    cmderMap.emplace('F', std::make_unique<FastCommand>());
+
+    // 2. 统一的遍历逻辑（对应 PPT Page 16 截图的下半部分）
     for (const auto cmd : commands) {
-        std::unique_ptr<ICommand> cmder;
-
-        if (cmd == 'M') {
-            cmder = std::make_unique<MoveCommand>();
-        } else if (cmd == 'L') {
-            cmder = std::make_unique<TurnLeftCommand>();
-        } else if (cmd == 'R') {
-            cmder = std::make_unique<TurnRightCommand>();
-        } else if (cmd == 'F') {
-            cmder = std::make_unique<FastCommand>(); 
+        const auto it = cmderMap.find(cmd);
+        if (it != cmderMap.end()) {
+            // 重点：这里传入的是解耦后的 poseHandler，不再是 *this
+            it->second->DoOperate(poseHandler);
         }
-
-        if (cmder) {
-             cmder->DoOperate(*this);
-        }
-        }
+    }
 }
 
 void ExecutorImpl::Move() noexcept
@@ -88,7 +87,7 @@ bool ExecutorImpl::IsFast() const noexcept
 
 Pose ExecutorImpl::Query() const noexcept
 {
-    return pose;  // 返回当前（未初始化的）pose
+    return poseHandler.Query();  // 委托查询
 }
 
 }  // namespace adas
