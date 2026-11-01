@@ -1,5 +1,5 @@
 #pragma once
-#include "PoseHandler.hpp"  // 依赖变成 PoseHandler
+#include "PoseHandler.hpp"
 
 namespace adas
 {
@@ -8,7 +8,7 @@ class ICommand
 {
 public:
     virtual ~ICommand() = default;
-    virtual void DoOperate(PoseHandler& poseHandler) const noexcept = 0;  // 参数变更
+    virtual void DoOperate(PoseHandler& poseHandler) const noexcept = 0;
 };
 
 class MoveCommand final : public ICommand
@@ -30,8 +30,13 @@ public:
     {
         if (poseHandler.IsFast()) {
             poseHandler.Move();
+        }  // 叠加时先退1格
+        // 倒车时左转，实际上是车头向右转
+        if (poseHandler.IsReverse()) {
+            poseHandler.TurnRight();
+        } else {
+            poseHandler.TurnLeft();
         }
-        poseHandler.TurnLeft();  // 纠错PPT的笔误
     }
 };
 
@@ -42,8 +47,13 @@ public:
     {
         if (poseHandler.IsFast()) {
             poseHandler.Move();
+        }  // 叠加时先退1格
+        // 倒车时右转，实际上是车头向左转
+        if (poseHandler.IsReverse()) {
+            poseHandler.TurnLeft();
+        } else {
+            poseHandler.TurnRight();
         }
-        poseHandler.TurnRight();
     }
 };
 
@@ -53,6 +63,15 @@ public:
     void DoOperate(PoseHandler& poseHandler) const noexcept override
     {
         poseHandler.Fast();
+    }
+};
+
+class ReverseCommand final : public ICommand
+{
+public:
+    void DoOperate(PoseHandler& poseHandler) const noexcept override
+    {
+        poseHandler.Reverse();
     }
 };
 

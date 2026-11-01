@@ -20,12 +20,13 @@ ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : poseHandler(pose)
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
-    // 1. 构建表驱动（这就是 PPT 里 ... 省略的部分，从 Page 22 抄过来的）
+    // 1. 构建表驱动
     std::unordered_map<char, std::unique_ptr<ICommand>> cmderMap;
     cmderMap.emplace('M', std::make_unique<MoveCommand>());
     cmderMap.emplace('L', std::make_unique<TurnLeftCommand>());
     cmderMap.emplace('R', std::make_unique<TurnRightCommand>());
     cmderMap.emplace('F', std::make_unique<FastCommand>());
+    cmderMap.emplace('B', std::make_unique<ReverseCommand>());  // 新增这一行
 
     // 2. 统一的遍历逻辑（对应 PPT Page 16 截图的下半部分）
     for (const auto cmd : commands) {

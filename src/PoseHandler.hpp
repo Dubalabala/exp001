@@ -7,7 +7,6 @@ class PoseHandler final
 {
 public:
     PoseHandler(const Pose& pose) noexcept;
-    // 禁止拷贝构造和赋值，确保状态管理唯一性
     PoseHandler(const PoseHandler&) = delete;
     PoseHandler& operator=(const PoseHandler&) = delete;
 
@@ -17,10 +16,13 @@ public:
     void TurnRight(void) noexcept;
     void Fast(void) noexcept;
     bool IsFast(void) const noexcept;
+    void Reverse(void) noexcept;          // 新增倒车状态切换
+    bool IsReverse(void) const noexcept;  // 新增倒车状态查询
     Pose Query(void) const noexcept;
 
 private:
     Pose pose;
     bool fast{false};
+    bool reverse{false};  // 倒车状态
 };
 }  // namespace adas
