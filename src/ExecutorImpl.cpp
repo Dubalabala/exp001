@@ -1,10 +1,13 @@
 #include "ExecutorImpl.hpp"
 
+#include <algorithm>
 #include <functional>
 #include <memory>
 #include <unordered_map>
 
+#include "CmderFactory.hpp"
 #include "Command.hpp"
+#include "Singleton.hpp"
 
 namespace adas
 {
@@ -15,21 +18,10 @@ ExecutorImpl::ExecutorImpl(const Pose& pose) noexcept : poseHandler(pose)
 
 void ExecutorImpl::Execute(const std::string& commands) noexcept
 {
-    // 核心简化：利用初始化列表，直接构建映射表，并加上 const 保证安全
-    const std::unordered_map<char, std::function<void(PoseHandler&)>> cMderMap{
-        {'M', MoveCommand()},
-        {'L', TurnLeftCommand()},
-        {'R', TurnRightCommand()},
-        {'F', FastCommand()},
-        {'B', ReverseCommand()} 
-    };
+    const auto cmders = Singleton<CmderFactory>::Instance().GetCmders(commands);
 
-    for (const auto cmd : commands) {
-        const auto it = cMderMap.find(cmd);
-        if (it != cMderMap.end()) {
-            it->second(poseHandler);  
-        }
-    }
+    std::for_each(cmders.begin(), cmders.end(),
+                  [this](const std::function<void(PoseHandler& poseHandler)>& cmder) noexcept { cmder(poseHandler); });
 }
 
 Pose ExecutorImpl::Query() const noexcept
